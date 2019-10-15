@@ -5,13 +5,13 @@ abstract class RegisterEvent extends Equatable {
   RegisterEvent([List props = const []]) : super();
 }
 
-class OnSubmited extends RegisterEvent {
+class OnSubmitedRegister extends RegisterEvent {
   final String email;
   final String password;
   final String first_name;
   final String last_name;
 
-  OnSubmited(
+  OnSubmitedRegister(
       {@required this.email,
       @required this.password,
       @required this.first_name,
@@ -32,7 +32,7 @@ class OnError extends RegisterEvent {
   List<Object> get props => [this.error];
 }
 
-class OnSuccess extends RegisterEvent {
+class OnSuccessRegister extends RegisterEvent {
   @override
   // TODO: implement props
   List<Object> get props => null;

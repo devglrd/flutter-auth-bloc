@@ -30,7 +30,6 @@ class LoginForm extends StatefulWidget {
 
 class _LoginFormState extends State<LoginForm> {
   final _emailController = TextEditingController();
-
   final _passwordController = TextEditingController();
 
   @override

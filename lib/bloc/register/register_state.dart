@@ -10,7 +10,7 @@ class InitialRegisterState extends RegisterState {
   List<Object> get props => [];
 }
 
-class LoadedState extends RegisterState {
+class LoadedStateRegister extends RegisterState {
   @override
   // TODO: implement props
   List<Object> get props => null;

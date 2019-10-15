@@ -1,5 +1,7 @@
 import 'package:auth/bloc/bloc.dart';
+import 'package:auth/bloc/bloc.dart' as prefix1;
 import 'package:auth/bloc/register/bloc.dart';
+import 'package:auth/bloc/register/bloc.dart' as prefix0;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -34,13 +36,18 @@ class RegisterForm extends StatefulWidget {
 }
 
 class _RegisterFormState extends State<RegisterForm> {
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _firstNameController = TextEditingController();
+  final _lastNameController = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    final RegisterBloc registerBloc = BlocProvider.of<RegisterBloc>(context);
     return BlocListener(
         listener: (context, event) {},
-        bloc: BlocProvider.of<RegisterBloc>(context),
+        bloc: registerBloc,
         child: BlocBuilder(
-          bloc: BlocProvider.of<RegisterBloc>(context),
+          bloc: registerBloc,
           builder: (context, event) {
             print(event.runtimeType);
             return Container(
@@ -51,20 +58,43 @@ class _RegisterFormState extends State<RegisterForm> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
-                    TextField(decoration: InputDecoration(hintText: "Email")),
                     TextField(
+                        controller: _emailController,
+                        decoration: InputDecoration(hintText: "Email")),
+                    TextField(
+                        controller: _firstNameController,
                         decoration: InputDecoration(hintText: "First Name")),
                     TextField(
+                        controller: _lastNameController,
                         decoration: InputDecoration(hintText: "Last Name")),
                     TextField(
+                      controller: _passwordController,
                       decoration: InputDecoration(hintText: "password"),
                       obscureText: true,
                     ),
                     MaterialButton(
-                      
                       child: Text('Register'),
-                      onPressed: () {},
-                    )
+                      onPressed: () {
+                        registerBloc.dispatch(OnSubmitedRegister(
+                            email: _emailController.text,
+                            first_name: _firstNameController.text,
+                            last_name: _lastNameController.text,
+                            password: _passwordController.text));
+                      },
+                    ),
+                    event is LoadedStateRegister
+                        ? Center(
+                            child: CircularProgressIndicator(),
+                          )
+                        : Center(),
+                    event is RegisterFailure
+                        ? Center(
+                            child: Text(
+                              "A error has been encoured",
+                              style: TextStyle(color: Colors.red),
+                            ),
+                          )
+                        : Center()
                   ],
                 ),
               ),

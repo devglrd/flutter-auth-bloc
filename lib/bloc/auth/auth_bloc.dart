@@ -4,7 +4,7 @@ import 'package:auth/bloc/bloc.dart';
 import 'package:auth/service/AuthService.dart';
 import 'package:bloc/bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-
+import 'package:overlay_support/overlay_support.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthService authSerivce;
@@ -16,6 +16,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   login(data) async {
     return await this.authSerivce.login(data);
+  }
+
+  register(data) async {
+    return await this.authSerivce.register(data);
   }
 
   @override
@@ -30,22 +34,26 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       print(isLogin);
       if (isLogin == false) {
         this.dispatch(LogggedOut());
-      }else if(isLogin.containsKey('id')){
+      } else if (isLogin.containsKey('id')) {
         this.dispatch(LoggedIn());
       }
-    } else if (event is LogggedOut) {
-      // LOGGED OUT
+    } else if (event is LoggedIn) {
       yield AuthLoading();
-      yield AuthNotAuthenticated();
-    } else if (event is LoggedIn) {      
       final storage = new FlutterSecureStorage();
       var key = await storage.read(key: "jwt");
-      yield AuthLoading();
-      yield AuthAuthenticated();
+      if (key != null) {
+        toast('You\'r logged in ! ');
+        yield AuthAuthenticated();
+      } else {
+        this.dispatch(LogggedOut());
+      }
     } else if (event is LogggedOut) {
       yield AuthLoading();
       final storage = new FlutterSecureStorage();
       await storage.delete(key: "jwt");
+      toast('You\'r logged out ! ');
+      yield AuthNotAuthenticated();
+    } else if (event is AuthNotAuthenticated) {
       this.dispatch(AppStarted());
     }
   }

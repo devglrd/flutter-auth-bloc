@@ -6,6 +6,7 @@ import 'package:auth/widget/common/LoadingIndicator.dart';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:overlay_support/overlay_support.dart';
 import 'bloc/auth/auth_bloc.dart';
 import 'bloc/bloc.dart';
 import 'package:auth/router/router.dart' as router;
@@ -72,30 +73,31 @@ class _AppState extends State<App> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        title: "Auth App",
-        initialRoute: HomeViewRoute,
-        onGenerateRoute: router.generateRoute,
-        home: BlocListener(
-          listener: (context, event) {
-            if (event is AuthAuthenticated) {
-              return Navigator.pushNamed(context, AppViewRoute);
-            } else if (event is AuthNotAuthenticated) {
-              return Navigator.pushNamed(context, HomeViewRoute);
-            }
-          },
-          bloc: BlocProvider.of<AuthBloc>(context),
-          child: BlocBuilder<AuthBloc, AuthState>(
-            bloc: BlocProvider.of<AuthBloc>(context),
-            builder: (context, state) {
-              if (state is AuthLoading) {
-                return LoadingIndicator();
-              } else if (state is AuthNotAuthenticated) {
-                return PublicPage();
-              }
-              return Center();
-            },
-          ),
-        ));
+    return OverlaySupport(
+        child: MaterialApp(
+            title: "Auth App",
+            initialRoute: HomeViewRoute,
+            onGenerateRoute: router.generateRoute,
+            home: BlocListener(
+              listener: (context, event) {
+                if (event is AuthAuthenticated) {
+                  return Navigator.pushNamed(context, AppViewRoute);
+                } else if (event is AuthNotAuthenticated) {
+                  return Navigator.pushNamed(context, HomeViewRoute);
+                }
+              },
+              bloc: BlocProvider.of<AuthBloc>(context),
+              child: BlocBuilder<AuthBloc, AuthState>(
+                bloc: BlocProvider.of<AuthBloc>(context),
+                builder: (context, state) {
+                  if (state is AuthLoading) {
+                    return LoadingIndicator();
+                  } else if (state is AuthNotAuthenticated) {
+                    return PublicPage();
+                  }
+                  return Center();
+                },
+              ),
+            )));
   }
 }
