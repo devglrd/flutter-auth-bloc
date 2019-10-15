@@ -1,33 +1,32 @@
 import 'dart:async';
+import 'package:auth/bloc/auth/auth_bloc.dart';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
-
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import './bloc.dart';
 
-import '../bloc.dart';
-
-class LoginBloc extends Bloc<LoginEvent, LoginState> {
-  final AuthBloc authenticationBloc;
-
-  LoginBloc({
-    @required this.authenticationBloc,
-  }) : assert(authenticationBloc != null);
+class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
+  final AuthBloc authentificationBloc;
+  RegisterBloc({@required this.authentificationBloc})
+      : assert(authentificationBloc != null);
+  @override
+  RegisterState get initialState => InitialRegisterState();
 
   @override
-  LoginState get initialState => InitialLoginState();
-
-  @override
-  Stream<LoginState> mapEventToState(
-    LoginEvent event,
+  Stream<RegisterState> mapEventToState(
+    RegisterEvent event,
   ) async* {
+    // TODO: Add Logic
+
     if (event is OnSubmited) {
       yield LoadedState();
       Map data = {
         'email': event.email.toString(),
-        "password": event.password.toString()
+        "password": event.password.toString(),
+        "first_name": event.first_name.toString(),
+        "last_name": event.last_name.toString(),
       };
-      var res = await this.authenticationBloc.login(data);
-      
+      var res = await this.authentificationBloc.login(data);
       if (res.containsKey('accessToken')) {
         final storage = new FlutterSecureStorage();
         await storage.write(key: "jwt", value: res["accessToken"]);
@@ -38,12 +37,11 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       }
     }
     if (event is OnSuccess) {
-      this.authenticationBloc.dispatch(LoggedIn());
-      yield LoginSucced();
+      yield RegisterSucced();
     }
 
     if (event is OnError) {
-      yield LoginFailure(error: event.error);
+      yield RegisterFailure(error: event.error);
     }
   }
 }

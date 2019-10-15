@@ -28,14 +28,16 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       yield AuthLoading();
       var isLogin = await this.authSerivce.auth();
       print(isLogin);
-      if (!isLogin) {
+      if (isLogin == false) {
         this.dispatch(LogggedOut());
+      }else if(isLogin.containsKey('id')){
+        this.dispatch(LoggedIn());
       }
     } else if (event is LogggedOut) {
       // LOGGED OUT
       yield AuthLoading();
       yield AuthNotAuthenticated();
-    } else if (event is LoggedIn) {
+    } else if (event is LoggedIn) {      
       final storage = new FlutterSecureStorage();
       var key = await storage.read(key: "jwt");
       yield AuthLoading();

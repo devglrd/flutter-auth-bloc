@@ -23,8 +23,14 @@ class LoginPage extends StatelessWidget {
   }
 }
 
-class LoginForm extends StatelessWidget {
+class LoginForm extends StatefulWidget {
+  @override
+  _LoginFormState createState() => _LoginFormState();
+}
+
+class _LoginFormState extends State<LoginForm> {
   final _emailController = TextEditingController();
+
   final _passwordController = TextEditingController();
 
   @override
@@ -46,6 +52,7 @@ class LoginForm extends StatelessWidget {
                   decoration: InputDecoration(hintText: 'Email'),
                 ),
                 TextField(
+                  obscureText: true,
                   controller: _passwordController,
                   decoration: InputDecoration(hintText: 'password'),
                 ),
