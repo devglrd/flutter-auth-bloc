@@ -53,8 +53,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       await storage.delete(key: "jwt");
       toast('You\'r logged out ! ');
       yield AuthNotAuthenticated();
-    } else if (event is AuthNotAuthenticated) {
-      this.dispatch(AppStarted());
     }
   }
 }

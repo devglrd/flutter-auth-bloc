@@ -3,6 +3,9 @@ import 'dart:io';
 import 'package:http/http.dart';
 
 class HttpService {
+
+  final String baseApi = "http://glrd.me:3000/api/";
+
   makeGetRequest(String url, {auth, token}) async {
     // make GET request
     var response;
@@ -18,7 +21,6 @@ class HttpService {
     // sample info available in response
     int statusCode = response.statusCode;
     String json = response.body;
-    
     return json;
   }
 

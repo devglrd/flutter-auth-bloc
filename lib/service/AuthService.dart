@@ -8,8 +8,8 @@ class AuthService extends HttpService {
     final storage = new FlutterSecureStorage();
     var jwt = await storage.read(key: "jwt");
 
-    var res = await this.makeGetRequest("http://127.0.0.1:3000/api/auth/me",
-        auth: true, token: jwt);
+    var res = await this
+        .makeGetRequest('${this.baseApi}auth/me', auth: true, token: jwt);
     var decode = jsonDecode(res);
     if (decode.containsKey('statusCode')) {
       if (decode["statusCode"] != 200) {
@@ -21,8 +21,7 @@ class AuthService extends HttpService {
   }
 
   login(data) async {
-    var res = await this
-        .makePostRequest("http://127.0.0.1:3000/api/auth/login", data);
+    var res = await this.makePostRequest("${this.baseApi}auth/login", data);
 
     var decode = jsonDecode(res);
     print(decode);
@@ -36,8 +35,7 @@ class AuthService extends HttpService {
   }
 
   register(data) async {
-    var res = await this
-        .makePostRequest("http://127.0.0.1:3000/api/auth/register", data);
+    var res = await this.makePostRequest("${this.baseApi}auth/register", data);
 
     var decode = jsonDecode(res);
     if (decode.containsKey('statusCode')) {
